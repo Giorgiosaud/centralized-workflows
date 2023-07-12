@@ -2,7 +2,10 @@ name: Create or Update a Draft Release
 
 on:
   workflow_call:
-
+    inputs:
+      legacy-peer-deps:
+        default: false
+        type: boolean
 permissions:
   # Setting up permissions in the workflow to limit the scope of what it can do.
   contents: write # to create a github release
