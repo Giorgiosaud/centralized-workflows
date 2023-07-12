@@ -1,0 +1,11 @@
+name: Create a Draft Release
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  call-release-drafter:
+    uses:  ./.github/workflows/release-drafter.yml@main
