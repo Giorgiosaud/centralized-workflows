@@ -62,4 +62,4 @@ jobs:
     - name: Publish to NPM Package Registry
       run: npm publish
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.npm-token }}
+        NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
