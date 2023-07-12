@@ -9,7 +9,12 @@ permissions:
   pull-requests: write # is required for autolabeler
 
 jobs:
+  install-dependencies:
+    uses: ./.github/workflows/install-dependencies.yml
+    with:
+      legacy-peer-deps: ${{inputs.legacy-peer-deps}}
   update-draft-release:
+    needs: install-dependencies
     name: Release Drafter
     runs-on: ubuntu-latest
     steps:
@@ -21,6 +26,20 @@ jobs:
           config-name: giorgio-release-drafter.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: setup node.js v18
+      uses: actions/setup-node@v3
+      with:
+        registry-url: 'https://registry.npmjs.org'
+        node-version: 18.x
+        cache: npm
+    - name: Restore Cache Node_modules based on npm-shrinkwrap changes
+      id: cache-node-modules
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-modules
+      with:
+        path: ./node_modules
+        key: ${{ hashFiles('**/npm-shrinkwrap.json') }}-node-modules
       - name: Versioning
         run : npm version ${{ steps.release-drafter.outputs.tag_name }} --allow-same-version --no-git-tag-version
       - name: Push changes
