@@ -29,28 +29,28 @@ jobs:
           config-name: giorgio-release-drafter.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: setup node.js v18
-      uses: actions/setup-node@v3
-      with:
-        registry-url: 'https://registry.npmjs.org'
-        node-version: 18.x
-        cache: npm
-    - name: Restore Cache Node_modules based on npm-shrinkwrap changes
-      id: cache-node-modules
-      uses: actions/cache@v3
-      env:
-        cache-name: cache-modules
-      with:
-        path: ./node_modules
-        key: ${{ hashFiles('**/npm-shrinkwrap.json') }}-node-modules
-      - name: Versioning
-        run : npm version ${{ steps.release-drafter.outputs.tag_name }} --allow-same-version --no-git-tag-version
-      - name: Push changes
-        run: |
-          git checkout -b fix/bump-package-version
-          git add .
-          git commit -m "fix: bump package version [skip actions]"
-          git push --set-upstream origin fix/bump-package-version
-          gh pr create --title "fix: bump self version [skip actions]" --body "Bump Version" --base "master"
+      - name: setup node.js v18
+        uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version: 18.x
+          cache: npm
+      - name: Restore Cache Node_modules based on npm-shrinkwrap changes
+        id: cache-node-modules
+        uses: actions/cache@v3
         env:
-          GH_TOKEN: ${{ github.token }}
+          cache-name: cache-modules
+        with:
+          path: ./node_modules
+          key: ${{ hashFiles('**/npm-shrinkwrap.json') }}-node-modules
+        - name: Versioning
+          run : npm version ${{ steps.release-drafter.outputs.tag_name }} --allow-same-version --no-git-tag-version
+        - name: Push changes
+          run: |
+            git checkout -b fix/bump-package-version
+            git add .
+            git commit -m "fix: bump package version [skip actions]"
+            git push --set-upstream origin fix/bump-package-version
+            gh pr create --title "fix: bump self version [skip actions]" --body "Bump Version" --base "master"
+          env:
+            GH_TOKEN: ${{ github.token }}
