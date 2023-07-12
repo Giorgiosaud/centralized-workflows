@@ -93,7 +93,7 @@ jobs:
         path: ./node_modules
         key: ${{ hashFiles('**/npm-shrinkwrap.json') }}-node-modules
     - name: Unit Tests
-      run: npm run test:coverage -- --ci --passWithNoTests
+      run: npm run test:coverage -- --ci --silent --passWithNoTests
     - name: SonarCloud Scan
       if: env.SONAR_TOKEN != null
       uses: SonarSource/sonarcloud-github-action@master
