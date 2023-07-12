@@ -34,14 +34,14 @@ jobs:
         registry-url: 'https://registry.npmjs.org'
         node-version: 18.x
         cache: npm
-    - name: Restore Cache Node_modules based on package-lock changes
+    - name: Restore Cache Node_modules based on npm-shrinkwrap changes
       id: cache-node-modules
       uses: actions/cache@v3
       env:
         cache-name: cache-modules
       with:
         path: ./node_modules
-        key: ${{ hashFiles('**/package-lock.json') }}-node-modules
+        key: ${{ hashFiles('**/npm-shrinkwrap.json') }}-node-modules
     - name: Versioning
       run : |
         echo $GITHUB_REF
