@@ -31,6 +31,7 @@ jobs:
     - name: setup node.js v18
       uses: actions/setup-node@v3
       with:
+        registry-url: 'https://registry.npmjs.org'
         node-version: 18.x
         cache: npm
     - name: Restore Cache Node_modules based on package-lock changes
