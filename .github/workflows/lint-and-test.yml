@@ -29,13 +29,13 @@ jobs:
         node-version: 18.x
         registry-url: 'https://registry.npmjs.org'
         cache: npm
-    - name: Cache Node_modules for package-lock
+    - name: Cache Node_modules for npm-shrinkwrap
       uses: actions/cache@v3
       env:
         cache-name: cache-modules
       with:
         path: ./node_modules
-        key: ${{ hashFiles('**/package-lock.json') }}-node-modules
+        key: ${{ hashFiles('**/npm-shrinkwrap.json') }}-node-modules
     - name: Lint JS
       run: npm run lint
   lint-css:
@@ -50,13 +50,13 @@ jobs:
         node-version: 18.x
         registry-url: 'https://registry.npmjs.org'
         cache: npm
-    - name: Cache Node_modules for package-lock
+    - name: Cache Node_modules for npm-shrinkwrap
       uses: actions/cache@v3
       env:
         cache-name: cache-modules
       with:
         path: ./node_modules
-        key: ${{ hashFiles('**/package-lock.json') }}-node-modules
+        key: ${{ hashFiles('**/npm-shrinkwrap.json') }}-node-modules
     - name: Lint Css
       run: npm run lint:style
   run-tests:
@@ -73,13 +73,13 @@ jobs:
         node-version: 18.x
         registry-url: 'https://registry.npmjs.org'
         cache: npm
-    - name: Cache Node_modules for package-lock
+    - name: Cache Node_modules for npm-shrinkwrap
       uses: actions/cache@v3
       env:
         cache-name: cache-modules
       with:
         path: ./node_modules
-        key: ${{ hashFiles('**/package-lock.json') }}-node-modules
+        key: ${{ hashFiles('**/npm-shrinkwrap.json') }}-node-modules
     - name: Unit Tests
       run: npm run test:coverage -- --ci --passWithNoTests
     - name: SonarCloud Scan
