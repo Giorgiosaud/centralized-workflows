@@ -2,7 +2,7 @@ name: Publish commons library
 on:
   workflow_call:
     secrets:
-        npm-token:
+        NODE_AUTH_TOKEN:
             required: true
     inputs:
       github-token:
