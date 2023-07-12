@@ -1,0 +1,64 @@
+name: Publish commons library
+on:
+  workflow_call:
+    secrets:
+        npm-token:
+            required: true
+    inputs:
+      github-token:
+        type: string
+        description: 'GITHUB_TOKEN or a scoped Personal Access Token (PAT)'
+        required: false
+        default: ${{ github.token }}
+      legacy-peer-deps:
+        default: false
+        type: boolean
+jobs:
+  install-dependencies:
+    uses: ./.github/workflows/install-dependencies.yml
+    with:
+      legacy-peer-deps: ${{inputs.legacy-peer-deps}}
+  build-and-publish:
+    needs: install-dependencies
+    name: Build and publish to private github registry
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+    - uses: actions/checkout@v3
+    - name: setup node.js v18
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: npm
+    - name: Restore Cache Node_modules based on package-lock changes
+      id: cache-node-modules
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-modules
+      with:
+        path: ./node_modules
+        key: ${{ hashFiles('**/package-lock.json') }}-node-modules
+    - name: Versioning
+      run : |
+        echo $GITHUB_REF
+        TAG=$(echo $GITHUB_REF | cut -c 11-)
+        echo $TAG
+        git config user.email "support+actions@github.com"
+        git config user.name "github-actions-bot"
+        npm version $TAG --allow-same-version --no-git-tag-version
+        git checkout -b fix/bump-package-version
+        git status
+        git add .
+        git status
+        git commit -m "fix: bump package version [skip actions]"
+        git status
+        git push --set-upstream origin fix/bump-package-version
+        gh pr create --title "fix: bump self version" --body "Bump Version"
+      env:
+        GH_TOKEN: ${{ github.token }}
+    - name: Publish to NPM Package Registry
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,0 +1,87 @@
+
+name: Linter and test
+on:
+  workflow_call:
+    inputs:
+      legacy-peer-deps:
+        default: false
+        type: boolean
+      replace-lcov-paths:
+        default: false
+        type: boolean
+    secrets:
+      SONAR_TOKEN: 
+        required: false
+jobs:
+  install-dependencies:
+    uses: ./.github/workflows/install-dependencies.yml
+    with:
+      legacy-peer-deps: ${{inputs.legacy-peer-deps}}
+  lint-js:
+    name: Lint JS files
+    needs: install-dependencies
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: setup node.js v18
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: npm
+    - name: Cache Node_modules for package-lock
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-modules
+      with:
+        path: ./node_modules
+        key: ${{ hashFiles('**/package-lock.json') }}-node-modules
+    - name: Lint JS
+      run: npm run lint
+  lint-css:
+    name: Lint Css files
+    needs: install-dependencies
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: setup node.js v18
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: npm
+    - name: Cache Node_modules for package-lock
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-modules
+      with:
+        path: ./node_modules
+        key: ${{ hashFiles('**/package-lock.json') }}-node-modules
+    - name: Lint Css
+      run: npm run lint:style
+  run-tests:
+    name: Runing Test Coverage and Sonarcloud
+    needs: install-dependencies
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: setup node.js v18
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: npm
+    - name: Cache Node_modules for package-lock
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-modules
+      with:
+        path: ./node_modules
+        key: ${{ hashFiles('**/package-lock.json') }}-node-modules
+    - name: Unit Tests
+      run: npm run test:coverage -- --ci --passWithNoTests
+    - name: SonarCloud Scan
+      if: env.SONAR_TOKEN != null
+      uses: SonarSource/sonarcloud-github-action@master
+      env: 
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

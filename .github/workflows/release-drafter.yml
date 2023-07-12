@@ -1,0 +1,22 @@
+name: Create or Update a Draft Release
+
+on:
+  workflow_call:
+
+permissions:
+  # Setting up permissions in the workflow to limit the scope of what it can do.
+  contents: write # to create a github release
+  pull-requests: write # is required for autolabeler
+
+jobs:
+  update-draft-release:
+    name: Release Drafter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: release-drafter/release-drafter@v5
+        with:
+          # due to probot configuration, it references to @org/.github repository by default
+          # ref: https://github.com/probot/probot-config#recipes
+          config-name: modyo-release-drafter.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
