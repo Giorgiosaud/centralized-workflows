@@ -8,4 +8,4 @@ on:
 
 jobs:
   call-release-drafter:
-    uses:  ./.github/workflows/release-drafter.yml@main
+    uses:  ./.github/workflows/release-drafter.yml
