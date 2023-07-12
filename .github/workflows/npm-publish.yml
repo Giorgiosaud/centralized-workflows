@@ -42,24 +42,24 @@ jobs:
       with:
         path: ./node_modules
         key: ${{ hashFiles('**/npm-shrinkwrap.json') }}-node-modules
-    - name: Versioning
-      run : |
-        echo $GITHUB_REF
-        TAG=$(echo $GITHUB_REF | cut -c 11-)
-        echo $TAG
-        git config user.email "support+actions@github.com"
-        git config user.name "github-actions-bot"
-        npm version $TAG --allow-same-version --no-git-tag-version
-        git checkout -b fix/bump-package-version
-        git status
-        git add .
-        git status
-        git commit -m "fix: bump package version [skip actions]"
-        git status
-        git push --set-upstream origin fix/bump-package-version
-        gh pr create --title "fix: bump self version [skip actions]" --body "Bump Version" --base "master"
-      env:
-        GH_TOKEN: ${{ github.token }}
+    # - name: Versioning
+    #   run : |
+    #     echo $GITHUB_REF
+    #     TAG=$(echo $GITHUB_REF | cut -c 11-)
+    #     echo $TAG
+    #     git config user.email "support+actions@github.com"
+    #     git config user.name "github-actions-bot"
+    #     npm version $TAG --allow-same-version --no-git-tag-version
+    #     git checkout -b fix/bump-package-version
+    #     git status
+    #     git add .
+    #     git status
+    #     git commit -m "fix: bump package version [skip actions]"
+    #     git status
+    #     git push --set-upstream origin fix/bump-package-version
+    #     gh pr create --title "fix: bump self version [skip actions]" --body "Bump Version" --base "master"
+    #   env:
+    #     GH_TOKEN: ${{ github.token }}
     - name: Publish to NPM Package Registry
       run: |
         echo '//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN  }}' > ${{ github.workspace }}/.npmrc
