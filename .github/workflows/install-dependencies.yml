@@ -21,7 +21,7 @@ jobs:
       with:
         path: ./node_modules
         lookup-only: true
-        key: ${{ hashFiles('**/package-lock.json') }}-node-modules
+        key: ${{ hashFiles('**/npm-shrinkwrap.json') }}-node-modules
     - name: setup node.js v18
       if: steps.cache-node-modules.outputs.cache-hit != 'true'
       uses: actions/setup-node@v3
