@@ -47,6 +47,8 @@ jobs:
         run : npm version ${{ steps.release-drafter.outputs.tag_name }} --allow-same-version --no-git-tag-version
       - name: Push changes
         run: |
+          git config user.email "support+actions@github.com"
+          git config user.name "github-actions-bot"
           git checkout -b fix/bump-package-version
           git add .
           git commit -m "fix: bump package version [skip actions]"
