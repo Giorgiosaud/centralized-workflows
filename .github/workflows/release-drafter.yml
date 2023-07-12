@@ -43,14 +43,14 @@ jobs:
         with:
           path: ./node_modules
           key: ${{ hashFiles('**/npm-shrinkwrap.json') }}-node-modules
-        - name: Versioning
-          run : npm version ${{ steps.release-drafter.outputs.tag_name }} --allow-same-version --no-git-tag-version
-        - name: Push changes
-          run: |
-            git checkout -b fix/bump-package-version
-            git add .
-            git commit -m "fix: bump package version [skip actions]"
-            git push --set-upstream origin fix/bump-package-version
-            gh pr create --title "fix: bump self version [skip actions]" --body "Bump Version" --base "master"
-          env:
-            GH_TOKEN: ${{ github.token }}
+      - name: Versioning
+        run : npm version ${{ steps.release-drafter.outputs.tag_name }} --allow-same-version --no-git-tag-version
+      - name: Push changes
+        run: |
+          git checkout -b fix/bump-package-version
+          git add .
+          git commit -m "fix: bump package version [skip actions]"
+          git push --set-upstream origin fix/bump-package-version
+          gh pr create --title "fix: bump self version [skip actions]" --body "Bump Version" --base "master"
+        env:
+          GH_TOKEN: ${{ github.token }}
