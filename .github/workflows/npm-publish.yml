@@ -60,6 +60,10 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
     - name: Publish to NPM Package Registry
-      run: npm publish
+      run: |
+        echo '//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN  }}' > ${{ github.workspace }}/.npmrc
+        cat .npmrc
+        npm publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
