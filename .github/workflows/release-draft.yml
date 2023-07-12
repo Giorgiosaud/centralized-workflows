@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - master
+permissions:
+  # Setting up permissions in the workflow to limit the scope of what it can do.
+  contents: write # to create a github release
+  pull-requests: write # is required for autolabeler
 
 jobs:
   call-release-drafter:
