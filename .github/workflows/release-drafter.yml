@@ -52,7 +52,7 @@ jobs:
           git checkout fix/bump-package-version 2>/dev/null || git checkout -b fix/bump-package-version
           git add .
           git commit -m "fix: bump package version [skip actions]"
-          git push --set-upstream origin fix/bump-package-version
+          git push --set-upstream origin fix/bump-package-version -f
           gh pr create --title "fix: bump self version [skip actions]" --body "Bump Version" --base "master"
         env:
           GH_TOKEN: ${{ github.token }}
