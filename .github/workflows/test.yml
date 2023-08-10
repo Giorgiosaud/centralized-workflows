@@ -10,12 +10,13 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     environment:
-      name: repository
-      url: https://github.com/orgs/${GITHUB_REPOSITORY_OWNER}/packages?repo_name=${GITHUB_REPOSITORY/$GITHUB_REPOSITORY_OWNER\//}
+      name: Registry url
+      url: ${{steps.url-set.outputs.url}}
     steps:
       - name: Push changes
         id: url-set
         run: |
           echo $PRUEBA
+          echo "url=https://github.com/orgs/${GITHUB_REPOSITORY_OWNER}/packages?repo_name=${GITHUB_REPOSITORY/$GITHUB_REPOSITORY_OWNER\//}" >> "$GITHUB_OUTPUT"
         env:
           PRUEBA: HOLA
