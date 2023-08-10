@@ -13,5 +13,6 @@ jobs:
       - name: Push changes
         run: |
           echo $PRUEBA
+          echo https://github.com/orgs/${GITHUB_REPOSITORY_OWNER}/packages?repo_name=${GITHUB_REPOSITORY/$GITHUB_REPOSITORY_OWNER\//}
         env:
           PRUEBA: HOLA
