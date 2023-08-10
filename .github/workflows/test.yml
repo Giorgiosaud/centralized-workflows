@@ -12,6 +12,6 @@ jobs:
     steps:
       - name: Push changes
         run: |
-          echo $HOLA
+          echo $PRUEBA
         env:
           PRUEBA: HOLA
