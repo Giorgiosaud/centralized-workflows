@@ -9,10 +9,22 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.url-set.outputs.url }}
     steps:
       - name: Push changes
+        id: url-set
         run: |
           echo $PRUEBA
-          echo https://github.com/orgs/${GITHUB_REPOSITORY_OWNER}/packages?repo_name=${GITHUB_REPOSITORY/$GITHUB_REPOSITORY_OWNER\//}
+          echo "url=https://github.com/orgs/${GITHUB_REPOSITORY_OWNER}/packages?repo_name=${GITHUB_REPOSITORY/$GITHUB_REPOSITORY_OWNER\//}" >> "$GITHUB_OUTPUT"
         env:
           PRUEBA: HOLA
+  print:
+    name: Print
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - env:
+          OUTPUT1: ${{needs.test.outputs.output1}}
+        name: show url
+        run:  echo "$OUTPUT1"
