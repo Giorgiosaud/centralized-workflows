@@ -1,0 +1,17 @@
+name: test wf
+
+on:
+  push:
+    branches:
+      - test
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push changes
+        run: |
+          echo $HOLA
+        env:
+          PRUEBA: HOLA
