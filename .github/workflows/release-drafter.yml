@@ -2,57 +2,21 @@ name: Create or Update a Draft Release
 
 on:
   workflow_call:
-    inputs:
-      legacy-peer-deps:
-        default: false
-        type: boolean
+
 permissions:
   # Setting up permissions in the workflow to limit the scope of what it can do.
   contents: write # to create a github release
   pull-requests: write # is required for autolabeler
 
 jobs:
-  install-dependencies:
-    uses: ./.github/workflows/install-dependencies.yml
-    with:
-      legacy-peer-deps: ${{inputs.legacy-peer-deps}}
   update-draft-release:
-    needs: install-dependencies
     name: Release Drafter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Create a release Draft
-        id: release-drafter
-        uses: release-drafter/release-drafter@v5
+      - uses: release-drafter/release-drafter@v5
         with:
+          # due to probot configuration, it references to @org/.github repository by default
+          # ref: https://github.com/probot/probot-config#recipes
           config-name: giorgio-release-drafter.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: setup node.js v18
-        uses: actions/setup-node@v3
-        with:
-          registry-url: 'https://registry.npmjs.org'
-          node-version: 18.x
-          cache: npm
-      - name: Restore Cache Node_modules based on npm-shrinkwrap changes
-        id: cache-node-modules
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-modules
-        with:
-          path: ./node_modules
-          key: ${{ hashFiles('**/npm-shrinkwrap.json') }}-node-modules
-      - name: Versioning
-        run : npm version ${{ steps.release-drafter.outputs.tag_name }} --allow-same-version --no-git-tag-version
-      - name: Push changes
-        run: |
-          git config user.email "support+actions@github.com"
-          git config user.name "github-actions-bot"
-          git checkout fix/bump-package-version 2>/dev/null || git checkout -b fix/bump-package-version
-          git add .
-          git commit -m "fix: bump package version [skip actions]"
-          git push --set-upstream origin fix/bump-package-version -f
-          gh pr create --title "fix: bump self version [skip actions]" --body "Bump Version" --base "master"
-        env:
-          GH_TOKEN: ${{ github.token }}
