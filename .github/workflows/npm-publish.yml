@@ -51,6 +51,8 @@ jobs:
           git config user.name "github-actions-bot"
           npm version $TAG --allow-same-version --no-git-tag-version
           git checkout -b bump-version-$TAG
+          git commit -m "docs: update version"
+          git push -u origin HEAD
           gh pr create --title "Bump version" --body "Update version"
       env:
         GH_TOKEN: ${{ github.token }}
