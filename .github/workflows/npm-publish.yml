@@ -51,7 +51,7 @@ jobs:
           git config user.name "github-actions-bot"
           npm version $TAG --allow-same-version --no-git-tag-version
           git checkout -b bump-version-$TAG
-          gh pr create
+          gh pr create --title bump-versioning --body new version
       env:
         GH_TOKEN: ${{ github.token }}
     - name: Publish to NPM Package Registry
