@@ -42,6 +42,16 @@ jobs:
       with:
         path: ./node_modules
         key: ${{ hashFiles('**/npm-shrinkwrap.json') }}-node-modules
+    - name: Versioning
+      run : |
+          echo $GITHUB_REF
+          TAG=$(echo $GITHUB_REF | cut -c 11-)
+          echo $TAG
+          git config user.email "support+actions@github.com"
+          git config user.name "github-actions-bot"
+          npm version $TAG --allow-same-version --no-git-tag-version
+      env:
+        GH_TOKEN: ${{ github.token }}
     - name: Publish to NPM Package Registry
       run: npm publish
       env:
