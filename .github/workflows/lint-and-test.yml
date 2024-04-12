@@ -28,6 +28,7 @@ jobs:
   install-dependencies:
     uses: ./.github/workflows/install-dependencies.yml
     with:
+      node-version: ${{inputs.node-version}}
       legacy-peer-deps: ${{inputs.legacy-peer-deps}}
   lint-js:
     if: ${{inputs.lint-js}}
