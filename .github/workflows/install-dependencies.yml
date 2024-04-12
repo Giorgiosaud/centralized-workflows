@@ -5,6 +5,9 @@ on:
       legacy-peer-deps:
         default: false
         type: boolean
+      node-version:
+        default: 18.x
+        type: string
 jobs:
   install-dependencies:
     name: Install Dependencies
@@ -22,11 +25,11 @@ jobs:
         path: ./node_modules
         lookup-only: true
         key: ${{ hashFiles('**/npm-shrinkwrap.json') }}-node-modules
-    - name: setup node.js v18
+    - name: setup node.js
       if: steps.cache-node-modules.outputs.cache-hit != 'true'
       uses: actions/setup-node@v3
       with:
-        node-version: 18.x
+        node-version: ${{inputs.node-version}}
         registry-url: 'https://registry.npmjs.org'
         cache: npm
     - name: Clean install dependencies full
